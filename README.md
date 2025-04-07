@@ -17,7 +17,6 @@ This repository, `uestc_projs`, serves as a collection of my coursework and comp
 
 1. **Clone the Repository**  
    ```bash
-   git clone https://github.com/your-username/uestc_projs.git
    cd uestc_projs
    ```
 
@@ -25,7 +24,6 @@ This repository, `uestc_projs`, serves as a collection of my coursework and comp
    Install dependencies using the provided `environment.yaml`:
    ```bash
    conda env create -f environment.yaml
-   conda activate uestc_projs_env
    ```
 
 3. **Run Projects**  
