@@ -3,8 +3,13 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 
+
 def load_data(dataset_name="cifar", file_path=None):
-    """Load dataset based on dataset_name."""
+    """
+    Load dataset based on dataset_name.
+    Get CIFAR-S dataset with openml.
+    Get HAM10000 dataset with link: https://www.kaggle.com/datasets/kmader/skin-cancer-mnist-ham10000?resource=download&select=hmnist_28_28_RGB.csv
+    """
     if dataset_name == "cifar":
         dataset = openml.datasets.get_dataset(40926)  # CIFAR-10
         df, _, _, _ = dataset.get_data()
@@ -25,7 +30,8 @@ def preprocess_data(df, dataset_name="cifar"):
     elif dataset_name == "ham10000":
         X = df.iloc[:, :2352].values  # First 2352 columns are pixel values
         y = df.iloc[:, 2352].values   # Last column is the label
-        # Map labels to integers if they aren't already
+
+        # Map labels to integers
         if not np.issubdtype(y.dtype, np.integer):
             unique_labels = np.unique(y)
             label_map = {label: i for i, label in enumerate(unique_labels)}
