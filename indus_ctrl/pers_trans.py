@@ -4,13 +4,6 @@ import os
 from camera import *
 
 
-import cv2
-
-def select_points(img, point_num=4, show_point=None):
-    """
-    在图像上点击 point_num 个点，并返回这些点的列表
-    如果传入 show_point，则先在图上显示这些点（格式为 [(x1,y1), (x2,y2), ...]）
-    """
     pts = []
     img_copy = img.copy()
 
@@ -23,29 +16,17 @@ def select_points(img, point_num=4, show_point=None):
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
             cv2.imshow(f"Select {point_num} Points", img_copy)
 
-    # 如果传入了 show_point，则先画出这些点
-    if show_point:
-        cv2.circle(img_copy, show_point, 5, (255, 0, 0), -1)  # 蓝色表示已知点
-
     cv2.imshow(f"Select {point_num} Points", img_copy)
     cv2.setMouseCallback(f"Select {point_num} Points", click_event)
-
     if point_num == 4:
-        print(f"请依次点击图像上的 {point_num} 个点（顺序：左上 -> 左下 -> 右下 -> 右上）")
     else:
-        print(f"请点击图像上的 {point_num} 个点。")
-
-    # 等待用户点击足够的点
     while True:
         cv2.imshow(f"Select {point_num} Points", img_copy)
-        if cv2.waitKey(1) & 0xFF == 27:  # 按 ESC 键退出
             break
         if len(pts) == point_num:
             break
-
     cv2.destroyWindow(f"Select {point_num} Points")
     return pts
-
 
 
 def compute_trans(img, pts):
