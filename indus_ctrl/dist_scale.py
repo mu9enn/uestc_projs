@@ -7,9 +7,6 @@ from pers_trans import *
 from color_detect import *
 import serial
 
-
-import numpy as np
-
 def inv_transform(point, matrix):
     """
     对单个点进行透视逆变换
@@ -132,11 +129,11 @@ def main():
     for center in dart_centers:
 
         start_xy = real_displace(center, scale, offset=offset, xy=True)
-        target_dart_img = select_points(img, point_num=1, show_point=inv_transform(center, matrix))
+        target_dart_img = select_points(transformed, point_num=1, show_point=center)
         end_xy = real_displace(target_dart_img[0], scale, offset=offset, xy=True)
-        command = generate_command(start_xy, end_xy, strt_z=30, end_z=30, grip=1, speed=3)
-        # 坐标 ( 如z的30 ) 以毫米为单位
+        command = generate_command(start_xy, end_xy, strt_z=30, end_z=30, grip=1, speed=3)  # 坐标 ( 如z的30 ) 以毫米为单位
         print(command)
+        # send_to_robot(command, port='COM3', baudrate=9600)
 
 
 if __name__ == "__main__":
