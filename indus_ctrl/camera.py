@@ -1,7 +1,6 @@
-import cv2
-import numpy as np
 import os
-import json
+
+import cv2
 import matplotlib.pyplot as plt
 
 
@@ -11,7 +10,7 @@ def show_image(image):
     plt.show()
 
 
-def capture_image(save_dir, cam=0, img_name="1.jpg"):
+def capture_image(save_dir, cam=0, img_name="captured.jpg"):
     """打开摄像头，实时显示视频流，按q键保存一帧为1.jpg"""
     cap = cv2.VideoCapture(cam)
     if not cap.isOpened():

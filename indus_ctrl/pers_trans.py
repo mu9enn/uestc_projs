@@ -1,7 +1,9 @@
-import cv2
 import numpy as np
-import os
 from camera import *
+import numpy as np
+
+from camera import *
+
 
 def select_points(img, point_num=4, show_point=None):
     pts = []
@@ -22,7 +24,8 @@ def select_points(img, point_num=4, show_point=None):
     cv2.setMouseCallback(f"Select {point_num} Points", click_event)
 
     if point_num == 4:
-        print(f"请依次点击图像上的 {point_num} 个点（顺序：左上 -> 左下 -> 右下 -> 右上）")
+        print(f"请依次点击图像上的 {point_num} 个点（顺序： 左上 左下 右下 右上）")
+        # 让图像坐标系与机械臂坐标系对齐
     else:
         print(f"请点击图像上的 {point_num} 个点。")
 
@@ -36,17 +39,28 @@ def select_points(img, point_num=4, show_point=None):
     return pts
 
 def compute_trans(img, pts):
+    # pts获取时为(f"请依次点击图像上的 {point_num} 个点（顺序： 左上 左下 右下 右上）")
     pts1 = np.float32(pts)
+
+    # 这里需要调整来保证转换后的图片宽高是对的
     h, w = img.shape[:2]
     pts2 = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]])
+    # pts2 = np.float32([[w-1, h-1], [0, h-1], [0, 0], [w-1, 0]])
 
     matrix = cv2.getPerspectiveTransform(pts1, pts2)
     result = cv2.warpPerspective(img, matrix, (w, h))
 
     return matrix, result
 
+
+def align_trans(img):
+    rotated_img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
+    out_img = cv2.flip(rotated_img, 1)
+    return out_img
+
 if __name__ == "__main__":
     save_dir = r"D:\code_proj\uestc_projs\indus_ctrl"
+
     img = capture_image(save_dir, cam=1)
     pts = select_points(img)
     matrix, result = compute_trans(img, pts)

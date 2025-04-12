@@ -1,18 +1,6 @@
 import math
-from color_detect import *
-import math
 
 from color_detect import *
-
-
-def inv_transform(point, matrix):
-    # 对单个点进行透视逆变换
-    x, y = point
-    pt = np.array([x, y, 1.0], dtype=np.float32)
-    matrix_inv = np.linalg.inv(matrix)
-    dst = matrix_inv @ pt
-    dst /= dst[2]
-    return (int(dst[0]), int(dst[1]))
 
 
 def compute_image_scale(width, real_width=10.0):
@@ -21,8 +9,8 @@ def compute_image_scale(width, real_width=10.0):
 
 
 def real_displace(image_point, image_scale, offset=(0, 0), xy=True, image=None):
-    real_x = (image_point[0] - offset[0]) / image_scale
-    real_y = (image_point[1] - offset[1]) / image_scale
+    real_x = image_point[0] / image_scale - offset[0]
+    real_y = image_point[1] / image_scale - offset[1]
     if xy:
         return (real_x, real_y)
     else:
@@ -33,13 +21,17 @@ def real_displace(image_point, image_scale, offset=(0, 0), xy=True, image=None):
 
 
 def main():
-    img = load_image()
+    save_dir = r"D:\code_proj\uestc_projs\indus_ctrl"
+    # img = capture_image(save_dir, cam=0)
+    img = load_image(image_path=os.path.join(save_dir, "captured.jpg"))
+
     pts = select_points(img)
     matrix, transformed = compute_trans(img, pts)
+    transformed = align_trans(transformed)
 
-    width = transformed.shape[0]
+    width = transformed.shape[1]
     real_width = 297
-    offset = (20, 30)
+    offset = (0, 0)  # mm单位
     scale = compute_image_scale(width, real_width)
     print("Image scale (px/cm):", scale)
 
