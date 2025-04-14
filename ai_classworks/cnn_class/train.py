@@ -95,7 +95,7 @@ def evaluate_clip_zeroshot(model, processor, val_loader, candidate_labels, devic
     accuracy = 100 * correct / total
     return accuracy
 
-def perform_10_fold_cv(X, y, dataset_name="cifar", model_type="RN50", pretrained=False, num_epochs=5, batch_size=1024, device="cpu", candidate_labels=None):
+def perform_10_fold_cv(X, y, dataset_name="cifar", model_type="RN50", pretrained=False, num_epochs=5, batch_size=512, device="cuda", candidate_labels=None):
     """Perform 10-fold cross-validation with specified model and dataset."""
     dataset = CustomDataset(X, y, dataset_name=dataset_name)
     kfold = KFold(n_splits=10, shuffle=True, random_state=42)

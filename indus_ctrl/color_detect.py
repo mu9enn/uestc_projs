@@ -19,6 +19,11 @@ def color_detect(img, color_name, json_path="color_ranges.json"):
         upper_black = np.array([180, 255, 50])  # 亮度不超过 50（可根据需求调整）
         mask = cv2.inRange(hsv, lower_black, upper_black)
 
+    elif color_name == "green":
+        lower_black = np.array([35, 50, 46])  # 低饱和度、低亮度
+        upper_black = np.array([100, 255, 180])  # 亮度不超过 50（可根据需求调整）
+        mask = cv2.inRange(hsv, lower_black, upper_black)
+
     else:
 
         if color_name == "red":
@@ -69,11 +74,18 @@ def contours_center(image, kernel_size=3, iter=3, min_area=50, max_area=10000, p
     if print_:
         print([cv2.contourArea(contour) for contour in contours])
 
+    # dart_centers = []
+    # for i in range(len(contours)):
+    #     points = contours[i][:, 0]
+    #     center = points.mean(axis=0)
+    #     dart_centers.append(tuple(center.astype(int)))  # integer tuple
+
     dart_centers = []
     for i in range(len(contours)):
         points = contours[i][:, 0]
-        center = points.mean(axis=0)
-        dart_centers.append(tuple(center.astype(int)))  # integer tuple
+        max_y_index = np.argmax(points[:, 1])
+        center = points[max_y_index]
+        dart_centers.append(tuple(center.astype(int)))  # 将其作为整数元组添加到列表中
 
     return contours, dart_centers, binary
 
