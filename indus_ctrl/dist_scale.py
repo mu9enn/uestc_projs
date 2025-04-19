@@ -8,9 +8,19 @@ def compute_image_scale(width, real_width=10.0):
     return image_scale
 
 
-def real_displace(image_point, image_scale_297,image_scale_210, offset=(0, 0), xy=True, image=None):
+def real_displace(image_point, image_scale_297,image_scale_210, offset=(0, 0), xy=True, r_offset=0):
     real_x = image_point[0] / image_scale_210 - offset[0]
+    if image_point[1] < 425 :
+        real_x += 20  # 偏移矫正
+
     real_y = image_point[1] / image_scale_297 - offset[1]
+
+    if r_offset:  # 偏移矫正
+        angle = math.atan2(real_y, real_x)
+        radius = math.sqrt(real_x ** 2 + real_y ** 2)
+        new_radius = radius + r_offset
+        real_x = new_radius * math.cos(angle)
+        real_y = new_radius * math.sin(angle)
     if xy:
         return (real_x, real_y)
     else:
@@ -52,13 +62,16 @@ def test():
     save_dir = r"D:\code_proj\uestc_projs\indus_ctrl"
     img = capture_image(save_dir, cam=0)
 
-    pts = select_points(img)
-    print(pts)  # np.array([(147, 282), (342, 261), (347, 114), (209, 131)])
+    # pts = select_points(img)
+    pts = np.array([(214, 193), (355, 211), (364, 87), (250, 66)])
+    # print(pts)
 
     matrix, transformed, width_297, width_210 = compute_trans(img, pts)
     transformed = align_trans(transformed)
 
-    offset = (0,0)  # mm单位, 参考点()
+    # offset = (0,0)  # mm单位, 参考点()
+    offset = (435.93103-200, 879.12006-200)  # mm单位
+
     scale_210 = compute_image_scale(width_210, 210)
     scale_297 = compute_image_scale(width_297, 297)
     # print("Image scale (px/cm):", scale)

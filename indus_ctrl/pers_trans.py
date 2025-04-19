@@ -25,7 +25,6 @@ def select_points(img, point_num=4, show_point=None):
 
     if point_num == 4:
         print(f"请依次点击图像上的 {point_num} 个点（顺序： 左上 左下 右下 右上）")
-        # 让图像坐标系与机械臂坐标系对齐
     else:
         print(f"请点击图像上的 {point_num} 个点。")
 
@@ -38,14 +37,6 @@ def select_points(img, point_num=4, show_point=None):
     cv2.destroyWindow(f"Select {point_num} Points")
     return pts
 
-# def compute_trans(img, pts):
-#     pts1 = np.float32(pts)
-#     h, w = img.shape[:2]
-#     pts2 = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]])
-#     matrix = cv2.getPerspectiveTransform(pts1, pts2)
-#     result = cv2.warpPerspective(img, matrix, (w, h))
-#
-#     return matrix, result
 
 def compute_trans(img, pts):
     pts = np.float32(pts)
@@ -57,12 +48,6 @@ def compute_trans(img, pts):
     min_y = min(pts[:, 1])
     max_y = max(pts[:, 1])
 
-    # pts1 = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]])
-    # matrix = cv2.getPerspectiveTransform(pts, pts1)
-    # result = cv2.warpPerspective(img, matrix, (w, h))
-    # width = result.shape[1]
-
-    # 目标坐标系的四个角，覆盖整个变换后的图像区域
     pts2 = np.float32([[min_x, min_y], [min_x, max_y], [max_x, max_y], [max_x, min_y]])
 
     width_297 = max_x - min_x

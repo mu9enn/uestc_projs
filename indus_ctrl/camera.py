@@ -10,8 +10,8 @@ def show_image(image):
     plt.show()
 
 
-def capture_image(save_dir, cam=0, img_name="captured.jpg"):
-    """打开摄像头，实时显示视频流，按q键保存一帧为1.jpg"""
+def capture_image(save_dir, cam=0, img_name="captured_0418.jpg"):
+    """打开摄像头，实时显示视频流，按q键保存"""
     cap = cv2.VideoCapture(cam)
     if not cap.isOpened():
         print("Unable to open camera")
@@ -27,7 +27,6 @@ def capture_image(save_dir, cam=0, img_name="captured.jpg"):
         cv2.imshow("Camera", frame)
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):
-            # 保存当前帧到指定路径
             img_path = os.path.join(save_dir, img_name)
             cv2.imwrite(img_path, frame)
             print(f"Image saved to: {img_path}")
